@@ -1,0 +1,27 @@
+{% extends "main/base.html" %}
+{% load media_tag %}
+{% block content %}
+
+    <div class="col-lg-9 col-md-6 col-sm-12">
+        <div class="card mb-4 box-shadow">
+            <div class="card-body">
+
+                <small class="d-block text-muted">Категория:
+                    {{ item.category }}
+                </small>
+                <small class="d-block mb-3 text-muted">Производитель:
+                    {{ item.category.description }}
+                </small>
+                <img style="width: 200px" src="{{ item.photo|mediapath }}" class="rounded" alt="{{ item.name }}">
+                <p>
+                    {{ item.description }}
+                </p>
+                <h2 class="card-title pricing-card-title">Цена:
+                    {{ item.price }}
+                </h2>
+                <button type="button" class="w-100 btn btn-lg btn-success my-2">Купить</button>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

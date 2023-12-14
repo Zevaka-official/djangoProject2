@@ -1,9 +1,23 @@
-
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from .models import Product, Contact
 
 
 def index(request):
-    return render(request, 'main/index.html')
+    product_list = Product.objects.order_by('pk')[:5]
+    context = {
+        'object_list': product_list,
+        'title': 'Главная страница'
+    }
+    return render(request, 'main/index.html', context)
+
+
+def show_item(request, pk):
+    item = get_object_or_404(Product, pk=pk)
+    context = {
+        'item': item,
+        'title': item
+    }
+    return render(request, 'main/item.html', context)
 
 
 def contacts(request):
@@ -12,4 +26,10 @@ def contacts(request):
         email = request.POST.get('email')
         message = request.POST.get('message')
         print(f'{name} ({email}): {message}')
-    return render(request, "main/contacts.html")
+    contact_list = [{
+        'name': contact.name,
+        'phone': contact.phone,
+        'address': contact.address,
+        'email': contact.email
+    } for contact in Contact.objects.all()]
+    return render(request, "main/contacts.html", {'title': 'Контакты', 'contacts': contact_list})
