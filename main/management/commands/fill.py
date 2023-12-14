@@ -1,18 +1,33 @@
-from django.core.management.base import BaseCommand
-from main.models import Category, Product
+from django.core.management import BaseCommand
+
+from main.models import Product, Category
 
 
 class Command(BaseCommand):
-    help = 'Заполняет базу данных новыми данными, удаляя старые'
 
-    def handle(self, *args, **kwargs):
-        # Очистка данных
+    def handle(self, *args, **options):
         Category.objects.all().delete()
         Product.objects.all().delete()
 
-        # Заполнение новыми данными
-        Category.objects.create(name='Новая категория', description='Описание новой категории')
-        Product.objects.create(name='Новый продукт', description='Описание нового продукта', price=1000,
-                               category=Category.objects.first())
+        categories_list = [Category(name='Pepé Мемы', description='Мемы с Пепе'),
+                           Category(name='Pepé Комиксы', description='Комиксы с Пепе'),
+                           Category(name='Pepé Продукты', description='Продукты с изображением Пепе'),
+                           ]
 
-        self.stdout.write(self.style.SUCCESS('База данных успешно заполнена новыми данными'))
+        Category.objects.bulk_create(categories_list)
+        product_list = [Product(name='Пепе Футболка', description='Футболка с изображением Пепе', price=150,
+                                category=categories_list[2]),
+                        Product(name='Пепе Кружка', description='Футболка с изображением Пепе', price=150,
+                                category=categories_list[2]),
+                        Product(name='Пепе Memes', description='Мемы про Пепе', price=150,
+                                category=categories_list[0]),
+                        Product(name='Пепе Манго', description='Манго про Пепе', price=150,
+                                category=categories_list[1]),
+                        Product(name='Панамка с Пепе', description='Головной убор с Пепе', price=150,
+                                category=categories_list[2]),
+                        Product(name='Носки с Пепе', description='Носочки с Пепегой', price=150,
+                                category=categories_list[2]),
+
+                        ]
+
+        Product.objects.bulk_create(product_list)
