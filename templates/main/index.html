@@ -6,7 +6,7 @@
         <div class="card" style="width: 18rem;">
     <img src="{{ object.photo|mediapath }}" class="card-img-top" alt="{{ object.name }}">
     <div class="card-body">
-        <p class="card-text"> {{ object.description }} </p>
+        <p class="card-text"> {{ object.description | truncatechars:100}} </p>
         <a href="{% url "main:product_details"  object.id %}"> Подбронее о товаре... </a>
     </div>
     <div class="card-footer text-body-secondary">
