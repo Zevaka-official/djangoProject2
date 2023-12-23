@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %}
+{% load media_tag %}
+
+{% block content %}
+    <a class="btn btn-success m-3"  href="{% url "blog:create" %}">Создать блог</a>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+
+    {% for object in object_list %}
+        <div class="col">
+        <div class="card h-100">
+            <img src="{{ object.preview|mediapath }}" class="card-img-top" alt="{{ object.title }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ object.title}}</h5>
+                <p class="card-text"> {{ object.content | truncatechars:100 }} </p>
+                <a href="{% url "blog:detail" object.slug %}">Читать далее...</a>
+            </div>
+            <div class="card-footer text-body-secondary">
+                <span> {{ object.views_count }} просмотров</span>
+            </div>
+
+        </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
+
+
+
