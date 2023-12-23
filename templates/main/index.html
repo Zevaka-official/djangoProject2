@@ -2,19 +2,25 @@
 {% load media_tag %}
 
 {% block content %}
-    {% for object in object_list %}
-        <div class="card" style="width: 18rem;">
-    <img src="{{ object.photo|mediapath }}" class="card-img-top" alt="{{ object.name }}">
-    <div class="card-body">
-        <p class="card-text"> {{ object.description | truncatechars:100}} </p>
-        <a href="{% url "main:product_details"  object.id %}"> Подбронее о товаре... </a>
-    </div>
-    <div class="card-footer text-body-secondary">
-        {{ object.price }}
-    </div>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        {% for object in object_list %}
+            <div class="col">
+                <div class="card h-100">
 
-</div>
-    {% endfor %}
+                    <img src="{{ object.photo|mediapath }}" class="card-img-top" alt="{{ object.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title"> {{ object.name }}</h5>
+                        <p class="card-text"> {{ object.description | truncatechars:100 }} </p>
+                        <a href="{% url "main:product_details"  object.id %}"> Подбронее о товаре... </a>
+                    </div>
+                    <div class="card-footer text-body-secondary">
+                        {{ object.price }}
+                    </div>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
 
 

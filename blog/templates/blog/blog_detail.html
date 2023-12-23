@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+{% load media_tag %}
+
+{% block content %}
+    <a class="btn btn-danger m-3"  href="{% url "blog:delete" object.slug %}">Удалить статью</a>
+    <a class="btn btn-primary m-3"  href="{% url "blog:edit" object.slug %}">Редактировать статью</a>
+
+    {% if object.preview %}
+    <img style="height: 300px" src="{{ object.preview.url }}" alt="{{ object.title }}">
+    {%  endif %}
+
+    <h1>
+    {{ object.title }}
+    </h1>
+
+    <p> {{ object.content }}</p>
+    <span> {{ object.views_count }}</span>
+
+{% endblock %}
+
+
+
