@@ -41,6 +41,10 @@ class Contact(models.Model):
     phone = models.CharField(max_length=100, verbose_name='телефон')
     email = models.EmailField(verbose_name='email')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.cleaned_data = None
+
     def __str__(self):
         return self.name
 
