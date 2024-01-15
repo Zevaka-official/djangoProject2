@@ -1,8 +1,9 @@
 
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, FormView
+from django.views.generic import ListView, DetailView, FormView, CreateView
 
+from .forms import ProductForm
 from .models import Product, Contact
 
 
@@ -12,7 +13,7 @@ class IndexView(ListView):
     context_object_name = 'object_list'
     ordering = ['pk']
     extra_context = {'title': 'Главная страница'}
-    paginate_by = 5
+    paginate_by = 10
 
 
 class ItemView(DetailView):
@@ -46,3 +47,11 @@ class ContactsView(FormView):
         context = super().get_context_data(**kwargs)
         context['contacts'] = Contact.objects.all()
         return context
+
+
+class ItemCreate(CreateView):
+    model = Product
+    form_class = ProductForm
+    success_url = reverse_lazy('main:index')
+
+
