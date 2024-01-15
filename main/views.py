@@ -1,7 +1,7 @@
-
 from django.core.mail import send_mail
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, FormView, CreateView
+from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 
 from .forms import ProductForm
 from .models import Product, Contact
@@ -55,3 +55,16 @@ class ItemCreate(CreateView):
     success_url = reverse_lazy('main:index')
 
 
+class ItemUpdate(UpdateView):
+    model = Product
+    form_class = ProductForm
+    success_url = reverse_lazy('main:index')
+
+    def form_valid(self, form):
+        saved_object = form.save()
+        return redirect('main:product_details', pk=saved_object.id)
+
+
+class ItemDelete(DeleteView):
+    model = Product
+    success_url = reverse_lazy('main:index')

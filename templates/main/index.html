@@ -2,7 +2,9 @@
 {% load media_tag %}
 
 {% block content %}
+    <a class="btn btn-success m-3"  href="{% url "main:product_create" %}">Создать товар</a>
     <div class="row row-cols-1 row-cols-md-4 g-4">
+
         {% for object in object_list %}
             <div class="col">
                 <div class="card h-100">
