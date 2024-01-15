@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Product, Contact
+from .models import Category, Product, Contact, ProductVersion
 
 
 @admin.register(Category)
@@ -22,3 +22,8 @@ class ContactAdmin(admin.ModelAdmin):
     search_fields = ('name', 'address')
 
 
+@admin.register(ProductVersion)
+class ProductVersionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'product', 'version_name', 'version_number')
+    list_filter = ('product', 'is_latest')
+    search_fields = ('product', 'version_name')
