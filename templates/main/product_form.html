@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+{% load media_tag %}
+
+{% block content %}
+
+    <form method="post" enctype="multipart/form-data">  {% csrf_token %} {{ form.as_p }}
+        <button class="btn btn-success" type="submit"> Сохранить</button>
+    </form>
+    <a
+            class="btn btn-secondary m-3"
+            href="{% if object %} {% url "main:product_details" object.id %} {% else %} {% url "main:index" %} {% endif %}">Отмена</a>
+
+
+
+{% endblock %}
+

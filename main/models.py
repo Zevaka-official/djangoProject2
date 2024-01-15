@@ -26,6 +26,9 @@ class Product(models.Model):
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='дата создания')
     time_update = models.DateTimeField(auto_now=True, verbose_name='дата обновления')
 
+    @property
+    def active_version(self):
+        return self.versions.filter(is_latest=True).first()
 
     def __str__(self):
         return self.name
@@ -53,3 +56,15 @@ class Contact(models.Model):
         verbose_name_plural = 'контакты'
 
 
+class ProductVersion(models.Model):
+    version_name = models.CharField(max_length=255, verbose_name='версия')
+    version_number = models.IntegerField(default=1, verbose_name='номер версии')
+    is_latest = models.BooleanField(default=False, verbose_name='активная версия')
+    product = models.ForeignKey(Product, related_name='versions', on_delete=models.CASCADE, verbose_name='товар')
+
+    class Meta:
+        verbose_name = 'версия'
+        verbose_name_plural = 'версии'
+
+    def __str__(self):
+        return self.version_name

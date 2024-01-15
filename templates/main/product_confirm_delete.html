@@ -1,0 +1,12 @@
+{% extends 'main/base.html' %}
+{% load media_tag %}
+
+{% block content %}
+
+    <form method="post"> {% csrf_token %}
+        <p>Действительно хотите удалить товар <strong>"{{ object.title }}"</strong>? </p>
+        <button type="submit" class=" btn btn-danger">Удалить</button>
+        <a class="btn btn-secondary m-3" href="{% url "main:product_details" object.id %}">Отмена</a></form>
+
+
+{% endblock %}
