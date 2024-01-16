@@ -1,6 +1,9 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 
 from .forms import ProductForm
@@ -49,12 +52,17 @@ class ContactsView(FormView):
         return context
 
 
-class ItemCreate(CreateView):
+class ItemCreate(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('main:index')
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
+
+@method_decorator(login_required, name='dispatch')
 class ItemUpdate(UpdateView):
     model = Product
     form_class = ProductForm
@@ -62,9 +70,11 @@ class ItemUpdate(UpdateView):
 
     def form_valid(self, form):
         saved_object = form.save()
+        self.object.owner = self.request.user
         return redirect('main:product_details', pk=saved_object.id)
 
 
+@method_decorator(login_required, name='dispatch')
 class ItemDelete(DeleteView):
     model = Product
     success_url = reverse_lazy('main:index')
