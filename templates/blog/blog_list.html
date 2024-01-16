@@ -8,7 +8,7 @@
     {% for object in object_list %}
         <div class="col">
         <div class="card h-100">
-            <img src="{{ object.preview|mediapath }}" class="card-img-top" alt="{{ object.title }}">
+            <img src="{{ object.preview|mediapath }}" class="card-img-top img-fluid" style="height: 127px; object-fit: cover;" alt="{{ object.title }}">
             <div class="card-body">
                 <h5 class="card-title">{{ object.title}}</h5>
                 <p class="card-text"> {{ object.content | truncatechars:100 }} </p>
@@ -23,6 +23,3 @@
     {% endfor %}
     </div>
 {% endblock %}
-
-
-
