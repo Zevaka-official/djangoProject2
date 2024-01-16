@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'blog.apps.BlogConfig',
     'users_app.apps.UsersConfig',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -146,3 +147,6 @@ EMAIL_FILE_PATH = "tmp/app-messages"  # change this to a proper location
 AUTH_USER_MODEL = 'users_app.User'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
