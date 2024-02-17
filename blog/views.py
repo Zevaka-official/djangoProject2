@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -6,10 +7,11 @@ from django.views.generic import CreateView, ListView, DetailView, DeleteView, U
 from blog.models import Blog
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(CreateView, PermissionRequiredMixin):
     model = Blog
     fields = ('title', 'content', 'preview', 'is_published', "email_author")
     success_url = reverse_lazy('blog:list')
+    permission_required = ('blog.add_blog',)
 
 
 class BlogListView(ListView):
@@ -29,7 +31,7 @@ class BlogDetailView(DetailView):
         self.object.views_count += 1
         self.object.save()
         if self.object.views_count == 100 and self.object.email_author:
-        # print(f"УРАААААААААА!{self.object.views_count} просмотров!")
+            # print(f"УРАААААААААА!{self.object.views_count} просмотров!")
             send_mail(
                 "Test.title 1111",
                 "Test.message 11111",
@@ -40,14 +42,16 @@ class BlogDetailView(DetailView):
         return self.object
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(DeleteView, PermissionRequiredMixin):
     model = Blog
     success_url = reverse_lazy('blog:list')
+    permission_required = ('blog.delete_blog',)
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(UpdateView, PermissionRequiredMixin):
     model = Blog
     fields = ('title', 'content', 'preview', 'is_published', "email_author")
+    permission_required = ('blog.update_blog',)
 
     def form_valid(self, form):
         if form.is_valid():
