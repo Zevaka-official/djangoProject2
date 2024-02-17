@@ -1,13 +1,15 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
+from django.forms import inlineformset_factory
+from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 
-from .forms import ProductForm
-from .models import Product, Contact
+from .forms import ProductForm, ModeratorProductForm, VersionForm
+from .models import Product, Contact, ProductVersion
 
 
 class IndexView(ListView):
@@ -19,7 +21,7 @@ class IndexView(ListView):
     paginate_by = 10
 
 
-class ItemView(DetailView):
+class ItemDetailView(DetailView):
     model = Product
     template_name = 'main/item.html'
     context_object_name = 'item'
@@ -52,7 +54,7 @@ class ContactsView(FormView):
         return context
 
 
-class ItemCreate(LoginRequiredMixin, CreateView):
+class ItemCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('main:index')
@@ -63,7 +65,7 @@ class ItemCreate(LoginRequiredMixin, CreateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class ItemUpdate(UpdateView):
+class ItemUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('main:index')
@@ -73,8 +75,34 @@ class ItemUpdate(UpdateView):
         self.object.owner = self.request.user
         return redirect('main:product_details', pk=saved_object.id)
 
+    def get_form_class(self):
+        if not self.request.user.is_superuser and self.request.user.has_perm('main.set_published'):
+            return ModeratorProductForm
+        return ProductForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Изменение товара'
+        if self.request.user == self.object.owner or self.request.user.is_superuser:
+            VersionFormset = inlineformset_factory(Product, ProductVersion, form=VersionForm, extra=1)
+            if self.request.method == 'POST':
+                context['formset'] = VersionFormset(self.request.POST, instance=self.object)
+            else:
+                context['formset'] = VersionFormset(instance=self.object)
+        return context
+
+    def test_func(self):
+        obj = self.get_object()
+        return (obj.owner == self.request.user
+                or self.request.user.has_perms(['main.change_product'])
+                or self.request.user.is_superuser)
+
+    def handle_no_permission(self):
+        raise Http404('У вас нет прав для изменения этой страницы')
+
 
 @method_decorator(login_required, name='dispatch')
-class ItemDelete(DeleteView):
+class ItemDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('main:index')
+    permission_required = 'main.delete_product'
