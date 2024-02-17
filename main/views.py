@@ -9,7 +9,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 
 from .forms import ProductForm, ModeratorProductForm, VersionForm
-from .models import Product, Contact, ProductVersion
+from .models import Product, Contact, ProductVersion, Category
+from .services import get_cache_for_categories
 
 
 class IndexView(ListView):
@@ -106,3 +107,16 @@ class ItemDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('main:index')
     permission_required = 'main.delete_product'
+
+
+class CategoryListView(LoginRequiredMixin, ListView):
+    model = Category
+    template_name = 'main/categories.html'
+
+    def get_queryset(self):
+        return get_cache_for_categories(Product)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Список категорий'
+        return context
