@@ -10,14 +10,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = os.getenv('SECRET_KEY')
 
+# SECRET_KEY = os.getenv('SECRET_KEY')
 SECRET_KEY = 'django-insecure-h54)wddg6acp_kmii*j!yupg%(!^o0he0mb$*c5m#cgjk(+k@g'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = ["*"]
+# DEBUG = os.getenv('DEBUG') == 'True'
+DEBUG = True
+
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -71,9 +73,9 @@ WSGI_APPLICATION = 'djangoProject2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv('DB_NAME'),  # Название БД
-        'USER': os.getenv('DB_USER'),  # Пользователь для подключения
-        'PASSWORD': os.getenv('DB_PASSWORD'),  # Пароль для подключения
+        'NAME': 'weapons',#os.getenv('DB_NAME'),  # Название БД
+        'USER': 'postgres', #os.getenv('DB_USER'),  # Пользователь для подключения
+        #'PASSWORD': os.getenv('DB_PASSWORD'),  # Пароль для подключения
         'HOST': '127.0.0.1',  # Адрес, на котором развернут сервер БД
     }
 }
