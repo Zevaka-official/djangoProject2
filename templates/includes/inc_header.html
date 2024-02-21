@@ -1,8 +1,12 @@
 <h5 class="my-0 mr-md-auto font-weight-normal">Pepega's Store</h5>
 <nav class="ms-5">
     <a class="me-1 p-2 btn btn-outline-primary" href="{% url 'main:index' %}">Каталог</a>
+    <a class="me-1 p-2 btn btn-outline-primary" href="{% url 'main:categories' %}">Категории</a>
     <a class="me-1 p-2 btn btn-outline-primary" href="{% url 'main:contacts' %}">Контакты</a>
     <a class="me-1 p-2 btn btn-outline-primary" href="{% url 'blog:list' %}">Блог</a>
+{#    <a class="me-1 p-2 btn btn-outline-primary" href="{% url 'main:about' %}">О нас</a>#}
+{#    <a class="me-1 p-2 btn btn-outline-primary" href="{% url 'main:cart' %}">Корзина</a>#}
+{#    <a class="me-1 p-2 btn btn-outline-primary" href="{% url 'main:search' %}">Поиск</a>#}
 </nav>
 <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
     {% if user.is_authenticated %}
@@ -11,5 +15,6 @@
     {% else %}
         <a class="me-2 py-2 btn btn-outline-secondary" href="{% url 'users_app:login' %}">Войти</a>
         <a class="me-2 py-2 btn btn-outline-secondary" href="{% url 'users_app:register' %}">Регистрация</a>
+
     {% endif %}
 </nav>

@@ -1,5 +1,7 @@
 from django.db import models
 
+from djangoProject2 import settings
+
 NULLABLE = {
     'null': True, 'blank': True
 }
@@ -39,7 +41,10 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='категория')
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='дата создания')
     time_update = models.DateTimeField(auto_now=True, verbose_name='дата обновления')
-    version = models.ForeignKey(ProductVersion, on_delete=models.SET_NULL, null=True, default=None, related_name='products', verbose_name='версия')
+    version = models.ForeignKey(ProductVersion, on_delete=models.SET_NULL, null=True, default=None,
+                                related_name='products', verbose_name='версия')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, verbose_name='владелец')
+    is_published = models.BooleanField(default=False, verbose_name='публиковано')
 
     @property
     def active_version(self):
@@ -51,6 +56,12 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'товар'
         verbose_name_plural = 'товары'
+        permissions = [
+            (
+                'set_published',
+                'Can publish products'
+            ),
+        ]
 
 
 class Contact(models.Model):
@@ -69,6 +80,3 @@ class Contact(models.Model):
     class Meta:
         verbose_name = 'контакт'
         verbose_name_plural = 'контакты'
-
-
-

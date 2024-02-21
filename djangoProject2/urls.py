@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls', namespace='main')),
     path('blog/', include('blog.urls', namespace='blog')),
-    path('users/', include('users_app.urls')),
+    path('users/', include('users_app.urls', namespace='users')),
 
 ]
 
